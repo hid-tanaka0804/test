@@ -25,7 +25,7 @@ jobs:
           IP_ADDRESS=`curl ifconfig.io`
 
           # Add IP Address to Security Group Ingress
-          aws ec2 authorize-security-group-ingress --group-id ${{SECURITY_GROUP_ID}} --protocol tcp --port 80 --cidr "$IP_ADDRESS"/32        
+          aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP_ID --protocol tcp --port 80 --cidr "$IP_ADDRESS"/32        
 
 #       - run: curl -I -u "hid-tanaka@toyotasystems.com:11431dcc09f99fc91d7812bc9ce003f174" 'http://jenkins-elb-1023112119.ap-northeast-1.elb.amazonaws.com/job/test-web/build?token=test'
 
