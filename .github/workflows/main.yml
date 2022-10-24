@@ -2,7 +2,7 @@ name: AWS Deploy
 on: push
 
 env:
-  AWS_ROLE_ARN: arn:aws:iam::932467539795:role/mat-github-role
+  AWS_ROLE_ARN: arn:aws:iam::932467539795:role/mat-github-actions-oidc-role
   SECURITY_GROUP_ID: sg-031a66c68418b8f3d
 
 permissions:
