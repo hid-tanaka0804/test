@@ -1,0 +1,49 @@
+name: AWS Deploy
+on: push
+
+env:
+  AWS_ROLE_ARN: arn:aws:iam::932467539795:role/mat-github-role
+  SECURITY_GROUP_ID: SECURITY_GROUP_ID
+
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  aws-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ap-northeast-1
+      - run: aws sts get-caller-identity
+
+      - name: Add IP Address
+        run: |
+          # Public IP (Github Actions)
+          IP_ADDRESS=`curl ifconfig.io`
+
+          # Add IP Address to Security Group Ingress
+          aws ec2 authorize-security-group-ingress --group-id ${{SECURITY_GROUP_ID}} --protocol tcp --port 443 --cidr "$IP_ADDRESS"/32        
+
+      - name: E2E Test
+        uses: cypress-io/github-action@v2
+        with:
+            build: npm run build:e2e
+            start: npm run start:e2e
+            wait-on: 'http://localhost:3000'
+            wait-on-timeout: 120
+            record: true
+        env:
+            CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+#       - name: Remove IP Address  
+#         if: ${{ always() }}
+#         run: |
+#           # Public IP (Github Actions)
+#           IP_ADDRESS=`curl ifconfig.io`
+
+#           # Remove IP Address 
+#           aws ec2 revoke-security-group-ingress --group-id ${{SECURITY_GROUP_ID}} --protocol tcp --port 443 --cidr "$IP_ADDRESS"/32        
