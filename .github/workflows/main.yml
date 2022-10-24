@@ -3,7 +3,7 @@ on: push
 
 env:
   AWS_ROLE_ARN: arn:aws:iam::932467539795:role/mat-github-role
-  SECURITY_GROUP_ID: sg-01fd2a1ef554fdeb8
+  SECURITY_GROUP_ID: sg-031a66c68418b8f3d
 
 permissions:
   id-token: write
