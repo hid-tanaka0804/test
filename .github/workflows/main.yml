@@ -3,7 +3,7 @@ on: push
 
 env:
   AWS_ROLE_ARN: arn:aws:iam::932467539795:role/mat-github-role
-  SECURITY_GROUP_ID: SECURITY_GROUP_ID
+  SECURITY_GROUP_ID: sg-01fd2a1ef554fdeb8
 
 permissions:
   id-token: write
@@ -25,19 +25,9 @@ jobs:
           IP_ADDRESS=`curl ifconfig.io`
 
           # Add IP Address to Security Group Ingress
-          aws ec2 authorize-security-group-ingress --group-id ${{SECURITY_GROUP_ID}} --protocol tcp --port 443 --cidr "$IP_ADDRESS"/32        
+          aws ec2 authorize-security-group-ingress --group-id ${{SECURITY_GROUP_ID}} --protocol tcp --port 80 --cidr "$IP_ADDRESS"/32        
 
-      - name: E2E Test
-        uses: cypress-io/github-action@v2
-        with:
-            build: npm run build:e2e
-            start: npm run start:e2e
-            wait-on: 'http://localhost:3000'
-            wait-on-timeout: 120
-            record: true
-        env:
-            CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#       - run: curl -I -u "hid-tanaka@toyotasystems.com:11431dcc09f99fc91d7812bc9ce003f174" 'http://jenkins-elb-1023112119.ap-northeast-1.elb.amazonaws.com/job/test-web/build?token=test'
 
 #       - name: Remove IP Address  
 #         if: ${{ always() }}
