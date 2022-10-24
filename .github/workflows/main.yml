@@ -17,7 +17,6 @@ jobs:
         with:
           role-to-assume: ${{ env.AWS_ROLE_ARN }}
           aws-region: ap-northeast-1
-      - run: aws sts get-caller-identity
 
       - name: Add IP Address
         run: |
@@ -29,11 +28,11 @@ jobs:
 
       - run: curl -I -u "shared_mode2-automated-test@toyota-finance.co.jp:11292cde7df075fbadb167ec41d9a61be8" 'http://tw.mode2-automated-test.com/job/test-job/build?token=test'
 
-#       - name: Remove IP Address  
-#         if: ${{ always() }}
-#         run: |
-#           # Public IP (Github Actions)
-#           IP_ADDRESS=`curl ifconfig.io`
+      - name: Remove IP Address  
+        if: ${{ always() }}
+        run: |
+          # Public IP (Github Actions)
+          IP_ADDRESS=`curl ifconfig.io`
 
-#           # Remove IP Address 
-#           aws ec2 revoke-security-group-ingress --group-id ${{SECURITY_GROUP_ID}} --protocol tcp --port 443 --cidr "$IP_ADDRESS"/32        
+          # Remove IP Address 
+          aws ec2 revoke-security-group-ingress --group-id ${{SECURITY_GROUP_ID}} --protocol tcp --port 80 --cidr "$IP_ADDRESS"/32        
