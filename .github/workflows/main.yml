@@ -35,4 +35,4 @@ jobs:
           IP_ADDRESS=`curl ifconfig.io`
 
           # Remove IP Address 
-          aws ec2 revoke-security-group-ingress --group-id ${{SECURITY_GROUP_ID}} --protocol tcp --port 80 --cidr "$IP_ADDRESS"/32        
+          aws ec2 revoke-security-group-ingress --group-id $SECURITY_GROUP_ID --protocol tcp --port 80 --cidr "$IP_ADDRESS"/32        
